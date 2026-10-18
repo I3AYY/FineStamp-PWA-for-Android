@@ -8,18 +8,23 @@
 
     <link rel="manifest" href="./FineStampApp130_manifest.json">
 
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="FineStamp">
     <link rel="apple-touch-icon" href="https://img2.pic.in.th/FineStamp-logo-for-ios.png">
 
     <meta name="theme-color" content="#0d9488">
+    <meta name="msapplication-navbutton-color" content="#0d9488">
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&display=swap');
         
         body, html {
-            margin: 0; padding: 0; height: 100%; overflow: hidden; 
+            margin: 0; padding: 0; 
+            width: 100%; height: 100%;
+            height: 100dvh;
+            overflow: hidden; 
             background-color: #f1f5f9;
             font-family: 'Prompt', sans-serif;
             -webkit-tap-highlight-color: transparent;
@@ -28,33 +33,34 @@
         /* สไตล์สำหรับหน้าจอ Loading */
         #loader-container {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            width: 100%; height: 100%;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             background-color: #f1f5f9; z-index: 10;
-            transition: opacity 0.5s ease-out;
+            transition: opacity 0.4s ease-out;
         }
         
         .loader-logo {
             width: 80px; height: 80px; margin-bottom: 20px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px -5px rgba(13, 148, 136, 0.3);
+            border-radius: 18px;
+            box-shadow: 0 10px 25px -5px rgba(13, 148, 136, 0.35);
             animation: pulse-logo 2s infinite ease-in-out;
         }
 
         .spinner {
-            width: 40px; height: 40px;
-            border: 4px solid #cbd5e1;
+            width: 38px; height: 38px;
+            border: 3.5px solid #cbd5e1;
             border-top-color: #0d9488;
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            animation: spin 0.85s linear infinite;
         }
 
         .title-text { color: #1e293b; font-size: 24px; font-weight: 700; margin: 16px 0 4px 0; letter-spacing: -0.5px; }
-        .version-text { color: #64748b; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        .version-text { color: #0d9488; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
 
         @keyframes spin { 100% { transform: rotate(360deg); } }
         @keyframes pulse-logo {
             0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            50% { transform: scale(1.06); }
             100% { transform: scale(1); }
         }
 
@@ -62,16 +68,18 @@
         @media (prefers-color-scheme: dark) {
             body, html, #loader-container { background-color: #0f172a; }
             .title-text { color: #f8fafc; }
-            .version-text { color: #94a3b8; }
+            .version-text { color: #2dd4bf; }
             .spinner { border-color: #334155; border-top-color: #2dd4bf; }
         }
 
         iframe {
             position: fixed; top: 0; left: 0; bottom: 0; right: 0;
             width: 100%; height: 100%;
+            height: 100dvh;
             border: none; margin: 0; padding: 0;
-            overflow: hidden; z-index: 20;
-            opacity: 0; transition: opacity 0.5s ease-in;
+            overflow: auto; z-index: 20;
+            opacity: 0; transition: opacity 0.4s ease-in;
+            background-color: #f1f5f9;
         }
     </style>
 </head>
@@ -82,14 +90,14 @@
         <img src="https://img2.pic.in.th/FineStamp---Logo-bg-remove.png" alt="FineStamp Logo" class="loader-logo">
         <div class="spinner"></div>
         <h1 class="title-text">FineStamp</h1>
-        <p class="version-text">v1.3.1 AI Core</p>
+        <p class="version-text">v1.4.0 Pro AI Core</p>
     </div>
 
     <!-- Iframe ดึงเนื้อหาจาก Google Apps Script -->
     <iframe 
         id="app-frame"
         src="https://script.google.com/macros/s/AKfycbyywqSixglUsUJ2zO_M6lET-_KbRkdu8F-UECgZZaVkywCLd-TOfmAq-Hj13J1w51vr/exec"
-        allow="geolocation; microphone; camera"
+        allow="geolocation; microphone; camera; fullscreen"
         onload="hideLoader()"
     ></iframe>
 
@@ -104,9 +112,17 @@
                 
                 setTimeout(() => {
                     loader.style.display = 'none';
-                }, 500);
-            }, 300);
+                }, 400);
+            }, 250);
         }
+
+        // Fallback: ซ่อน Loader อัตโนมัติหากติดปัญหาเครือข่าย
+        setTimeout(() => {
+            const loader = document.getElementById('loader-container');
+            if (loader && loader.style.display !== 'none') {
+                hideLoader();
+            }
+        }, 6000);
     </script>
 </body>
 </html>
